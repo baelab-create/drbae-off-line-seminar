@@ -27,8 +27,8 @@
     --sub:#8A8178;
     --tab-h:58px;
     --gap:18px;
-    --slant:15px;
-    --skew:-20deg;
+    --slant:30px;      /* 사선 때문에 좌우로 빠지는 양 = tan(46°)×탭높이 ÷ 2 */
+    --skew:46deg;      /* 레퍼런스 실측값 — 아래가 오른쪽으로 기움 */
     --round:13px;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
@@ -58,7 +58,7 @@
     position:relative;z-index:60;flex:0 0 auto;
     color:var(--ink);background:var(--paper);
     border-radius:var(--round) 0 0 0;
-    padding:9px 16px 9px 26px;
+    padding:9px calc(var(--slant) * .5) 9px 26px;
     display:flex;flex-direction:column;justify-content:center;
   }
   /* 흰 탭의 오른쪽 둥근 사선 */
@@ -75,7 +75,7 @@
   .tab{
     position:relative;appearance:none;border:0;background:none;cursor:pointer;font:inherit;
     color:#FFEDEC;font-weight:700;font-size:.86rem;letter-spacing:.01em;white-space:nowrap;
-    padding:0 14px;margin-left:calc(var(--slant) * -1);
+    padding:0 calc(var(--slant) * .5 + 9px);margin-left:calc(var(--slant) * -1);
     flex:1 1 0;min-width:0;
     display:flex;align-items:center;justify-content:center;
     transition:color .18s;
@@ -88,6 +88,8 @@
     box-shadow:-4px 0 10px rgba(0,0,0,.16);
     transition:background .18s;
   }
+  /* 첫 탭은 흰 탭의 사선이 더 깊이 덮으므로 왼쪽 여백을 더 준다 */
+  .tab:first-child{padding-left:calc(var(--slant) * 1.25 + 8px);}
   .tab:hover{color:#fff;}
   .tab:hover::before{background:var(--red-d);}
   .tab.on{color:#fff;}
@@ -130,14 +132,14 @@
   }
 
   /* ---------- 좁은 화면 ---------- */
-  @media(max-width:860px){
-    :root{--gap:10px;--tab-h:52px;--slant:12px;--round:11px;}
-    .brand{padding:8px 10px 8px 16px;border-radius:10px 0 0 0;}
+  @media(max-width:1100px){
+    :root{--gap:10px;--tab-h:52px;--slant:27px;--round:11px;}
+    .brand{padding:8px calc(var(--slant) * .5) 8px 16px;border-radius:10px 0 0 0;}
     .brand .bt{font-size:.95rem;}
     .brand .bs{display:none;}
     .tabs{overflow-x:auto;scrollbar-width:none;}
     .tabs::-webkit-scrollbar{display:none;}
-    .tab{flex:0 0 auto;font-size:.78rem;padding:0 13px;}
+    .tab{flex:0 0 auto;font-size:.78rem;padding:0 calc(var(--slant) * .5 + 6px);}
     .foot .keys{display:none;}
   }
   @media(max-width:480px){
