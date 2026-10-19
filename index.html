@@ -19,9 +19,9 @@
   :root{
     --desk:#6B6058;          /* 바깥 책상 바탕 */
     --desk-d:#574E47;
-    --red:#FB5A5A;           /* 탭 빨강 */
-    --red-d:#F4615A;
-    --red-dim:#EE5A55;
+    --red:#FF4F4F;           /* 탭 빨강 — 레퍼런스 실측 */
+    --red-d:#F55B57;
+    --red-dim:#EC524E;
     --paper:#FFFFFF;
     --ink:#2B2B2B;
     --sub:#8A8178;
@@ -30,6 +30,7 @@
     --slant:30px;      /* 사선 때문에 좌우로 빠지는 양 = tan(46°)×탭높이 ÷ 2 */
     --skew:46deg;      /* 레퍼런스 실측값 — 아래가 오른쪽으로 기움 */
     --round:13px;
+    --tab-drop:6px;    /* 빨간 탭이 흰 탭보다 낮게 시작하는 만큼 */
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{height:100%;}
@@ -50,23 +51,33 @@
      레퍼런스처럼 '모서리가 둥근 사선 탭'. 배경만 skewX 로 기울이고 radius 를 주어
      바깥쪽 끝은 둥글게, 탭끼리 겹치는 안쪽은 사선 경계로 보이게 한다. */
   .tabbar{
+    position:relative;z-index:80;
     display:flex;align-items:stretch;height:var(--tab-h);flex:0 0 auto;
+    /* 탭 조각들이 아래로 14px 삐져나오게 만들어 두고 여기서 평평하게 자른다.
+       본문 패널보다 위에 놓아, 패널 그림자가 흰 탭을 흐리게 덮지 않도록 한다 */
+    overflow:hidden;
     filter:drop-shadow(0 7px 16px rgba(0,0,0,.34));
   }
 
   .brand{
     position:relative;z-index:60;flex:0 0 auto;
-    color:var(--ink);background:var(--paper);
-    border-radius:var(--round) 0 0 0;
+    color:var(--ink);background:none;
     padding:9px calc(var(--slant) * .5) 9px 26px;
     display:flex;flex-direction:column;justify-content:center;
   }
-  /* 흰 탭의 오른쪽 둥근 사선 */
+  /* 흰 탭의 곧은 왼쪽 — 오른쪽 끝을 조금 남겨 두어 사선 조각의 둥근 모서리가 드러나게 한다 */
+  .brand::before{
+    content:"";position:absolute;z-index:-1;
+    left:0;right:20px;top:0;bottom:-14px;
+    background:var(--paper);border-radius:var(--round) 0 0 0;
+  }
+  /* 흰 탭의 둥근 사선 오른쪽 끝 — 아래쪽이 비지 않도록 넉넉히 넓게 */
   .brand::after{
-    content:"";position:absolute;z-index:-1;top:0;bottom:-14px;
-    right:calc(var(--slant) * -1);width:calc(var(--slant) * 2);
+    content:"";position:absolute;z-index:-2;top:0;bottom:-14px;
+    right:calc(var(--slant) * -1);width:calc(var(--slant) * 2 + 40px);
     background:var(--paper);border-radius:var(--round);
     transform:skewX(var(--skew));
+    box-shadow:4px 0 10px rgba(0,0,0,.33);
   }
   .brand .bt{font-size:1.18rem;font-weight:700;font-style:italic;letter-spacing:.01em;white-space:nowrap;}
   .brand .bs{font-size:.62rem;font-weight:300;color:var(--sub);margin-top:3px;white-space:nowrap;}
@@ -80,16 +91,17 @@
     display:flex;align-items:center;justify-content:center;
     transition:color .18s;
   }
-  /* 기울인 배경 — 아래쪽은 흰 슬라이드가 덮으므로 둥근 밑모서리는 보이지 않는다 */
+  /* 기울인 배경 — 흰 탭보다 5px 낮게 시작하고, 아래쪽 둥근 모서리는 슬라이드가 덮는다.
+     그림자는 왼쪽 탭이 오른쪽 탭 위로 드리우는 방향(레퍼런스와 동일) */
   .tab::before{
-    content:"";position:absolute;z-index:-1;left:0;right:0;top:0;bottom:-14px;
+    content:"";position:absolute;z-index:-1;left:0;right:0;top:var(--tab-drop);bottom:-14px;
     background:var(--red-dim);border-radius:var(--round);
     transform:skewX(var(--skew));
-    box-shadow:-4px 0 10px rgba(0,0,0,.16);
+    box-shadow:4px 0 10px rgba(0,0,0,.33);
     transition:background .18s;
   }
   /* 첫 탭은 흰 탭의 사선이 더 깊이 덮으므로 왼쪽 여백을 더 준다 */
-  .tab:first-child{padding-left:calc(var(--slant) * 1.25 + 8px);}
+  .tab:first-child{padding-left:calc(var(--slant) * 1.4 + 8px);}
   .tab:hover{color:#fff;}
   .tab:hover::before{background:var(--red-d);}
   .tab.on{color:#fff;}
@@ -133,7 +145,7 @@
 
   /* ---------- 좁은 화면 ---------- */
   @media(max-width:1100px){
-    :root{--gap:10px;--tab-h:52px;--slant:27px;--round:11px;}
+    :root{--gap:10px;--tab-h:52px;--slant:27px;--round:11px;--tab-drop:5px;}
     .brand{padding:8px calc(var(--slant) * .5) 8px 16px;border-radius:10px 0 0 0;}
     .brand .bt{font-size:.95rem;}
     .brand .bs{display:none;}
