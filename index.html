@@ -20,14 +20,16 @@
     --desk:#6B6058;          /* 바깥 책상 바탕 */
     --desk-d:#574E47;
     --red:#FB5A5A;           /* 탭 빨강 */
-    --red-d:#E04A4A;
-    --red-dim:#D96A66;
+    --red-d:#F4615A;
+    --red-dim:#EE5A55;
     --paper:#FFFFFF;
     --ink:#2B2B2B;
     --sub:#8A8178;
     --tab-h:58px;
     --gap:18px;
-    --slant:26px;
+    --slant:15px;
+    --skew:-20deg;
+    --round:13px;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{height:100%;}
@@ -44,46 +46,60 @@
     display:flex;flex-direction:column;
   }
 
-  /* ---------- 탭 바 ---------- */
+  /* ---------- 탭 바 ----------
+     레퍼런스처럼 '모서리가 둥근 사선 탭'. 배경만 skewX 로 기울이고 radius 를 주어
+     바깥쪽 끝은 둥글게, 탭끼리 겹치는 안쪽은 사선 경계로 보이게 한다. */
   .tabbar{
     display:flex;align-items:stretch;height:var(--tab-h);flex:0 0 auto;
-    filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));
+    filter:drop-shadow(0 7px 16px rgba(0,0,0,.34));
   }
+
   .brand{
-    background:var(--paper);color:var(--ink);
-    padding:9px 44px 9px 26px;border-radius:10px 0 0 0;
-    clip-path:polygon(0 0,100% 0,calc(100% - var(--slant)) 100%,0 100%);
-    display:flex;flex-direction:column;justify-content:center;flex:0 0 auto;
-    position:relative;z-index:20;
+    position:relative;z-index:60;flex:0 0 auto;
+    color:var(--ink);background:var(--paper);
+    border-radius:var(--round) 0 0 0;
+    padding:9px 16px 9px 26px;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  /* 흰 탭의 오른쪽 둥근 사선 */
+  .brand::after{
+    content:"";position:absolute;z-index:-1;top:0;bottom:-14px;
+    right:calc(var(--slant) * -1);width:calc(var(--slant) * 2);
+    background:var(--paper);border-radius:var(--round);
+    transform:skewX(var(--skew));
   }
   .brand .bt{font-size:1.18rem;font-weight:700;font-style:italic;letter-spacing:.01em;white-space:nowrap;}
   .brand .bs{font-size:.62rem;font-weight:300;color:var(--sub);margin-top:3px;white-space:nowrap;}
 
   .tabs{display:flex;align-items:stretch;flex:1;min-width:0;}
   .tab{
-    appearance:none;border:0;cursor:pointer;font:inherit;
-    background:var(--red-dim);color:#FFE9E9;font-weight:700;
-    font-size:.86rem;letter-spacing:.01em;white-space:nowrap;
-    padding:0 18px 0 calc(18px + var(--slant));
-    margin-left:calc(var(--slant) * -1);
-    clip-path:polygon(var(--slant) 0,100% 0,calc(100% - var(--slant)) 100%,0 100%);
-    transition:background .18s,color .18s;
+    position:relative;appearance:none;border:0;background:none;cursor:pointer;font:inherit;
+    color:#FFEDEC;font-weight:700;font-size:.86rem;letter-spacing:.01em;white-space:nowrap;
+    padding:0 14px;margin-left:calc(var(--slant) * -1);
     flex:1 1 0;min-width:0;
     display:flex;align-items:center;justify-content:center;
+    transition:color .18s;
   }
-  .tab:first-child{margin-left:calc(var(--slant) * -1);}
-  .tab:hover{background:var(--red-d);color:#fff;}
-  .tab.on{background:var(--red);color:#fff;}
-  .tab:focus-visible{outline:2px solid #fff;outline-offset:-5px;}
-  .tab .num{
-    font-size:.68rem;font-weight:300;opacity:.8;margin-right:7px;
+  /* 기울인 배경 — 아래쪽은 흰 슬라이드가 덮으므로 둥근 밑모서리는 보이지 않는다 */
+  .tab::before{
+    content:"";position:absolute;z-index:-1;left:0;right:0;top:0;bottom:-14px;
+    background:var(--red-dim);border-radius:var(--round);
+    transform:skewX(var(--skew));
+    box-shadow:-4px 0 10px rgba(0,0,0,.16);
+    transition:background .18s;
   }
-  /* 마지막 탭의 오른쪽 사선 끝을 덮는 여백 */
-  .tabend{flex:0 0 var(--slant);}
+  .tab:hover{color:#fff;}
+  .tab:hover::before{background:var(--red-d);}
+  .tab.on{color:#fff;}
+  .tab.on::before{background:var(--red);}
+  .tab:focus-visible{outline:2px solid #fff;outline-offset:-6px;border-radius:4px;}
+  .tab .num{font-size:.68rem;font-weight:300;opacity:.82;margin-right:7px;}
+  /* 마지막 탭의 둥근 사선 끝이 들어갈 자리 */
+  .tabend{flex:0 0 calc(var(--slant) + 2px);}
 
   /* ---------- 본문(슬라이드) ---------- */
   .stage{
-    flex:1;min-height:0;position:relative;
+    flex:1;min-height:0;position:relative;z-index:70;
     background:var(--paper);
     border-radius:0 6px 6px 6px;
     box-shadow:0 18px 50px rgba(0,0,0,.42);
@@ -115,13 +131,13 @@
 
   /* ---------- 좁은 화면 ---------- */
   @media(max-width:860px){
-    :root{--gap:10px;--tab-h:52px;--slant:18px;}
-    .brand{padding:8px 30px 8px 16px;border-radius:8px 0 0 0;}
+    :root{--gap:10px;--tab-h:52px;--slant:12px;--round:11px;}
+    .brand{padding:8px 10px 8px 16px;border-radius:10px 0 0 0;}
     .brand .bt{font-size:.95rem;}
     .brand .bs{display:none;}
     .tabs{overflow-x:auto;scrollbar-width:none;}
     .tabs::-webkit-scrollbar{display:none;}
-    .tab{flex:0 0 auto;font-size:.78rem;padding:0 18px 0 calc(18px + var(--slant));}
+    .tab{flex:0 0 auto;font-size:.78rem;padding:0 13px;}
     .foot .keys{display:none;}
   }
   @media(max-width:480px){
@@ -171,6 +187,7 @@ PAGES.forEach((p, i) => {
   b.className = 'tab';
   b.type = 'button';
   b.innerHTML = '<span class="num">0' + (i+1) + '</span>' + p.t;
+  b.style.zIndex = 50 - i;          /* 왼쪽 탭이 오른쪽 탭 위로 겹치게 */
   b.addEventListener('click', () => show(i));
   tabsEl.appendChild(b);
 
@@ -187,6 +204,7 @@ function show(i){
   const tabs = tabsEl.children, frames = stage.children;
   for (let k = 0; k < PAGES.length; k++){
     tabs[k].classList.toggle('on', k === i);
+    tabs[k].style.zIndex = (k === i) ? 55 : 50 - k;
     tabs[k].setAttribute('aria-current', k === i ? 'page' : 'false');
     frames[k].classList.toggle('on', k === i);
   }
