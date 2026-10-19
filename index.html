@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>닥터배 오프라인 세미나</title>
+<meta name="description" content="닥터배 오프라인 세미나용 자료 모음 — 고객 안내 · 입점 주문 · 제품 라인업 · 마이크로젝션 · 두피 케어를 탭 하나로">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="닥터배 메디컬 에스테틱">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://baelab-create.github.io/drbae-off-line-seminar/">
+<meta property="og:title" content="닥터배 오프라인 세미나">
+<meta property="og:description" content="세미나 자료 5종을 탭 하나로 — 고객 안내 · 입점 주문 · 제품 라인업 · 마이크로젝션 · 두피 케어">
+
+<link rel="stylesheet" href="https://baelab-create.github.io/drbae-fonts/gmarket.css">
+<style>
+  :root{
+    --desk:#6B6058;          /* 바깥 책상 바탕 */
+    --desk-d:#574E47;
+    --red:#FB5A5A;           /* 탭 빨강 */
+    --red-d:#E04A4A;
+    --red-dim:#D96A66;
+    --paper:#FFFFFF;
+    --ink:#2B2B2B;
+    --sub:#8A8178;
+    --tab-h:58px;
+    --gap:18px;
+    --slant:26px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    font-family:"Gmarket Sans","Pretendard",-apple-system,BlinkMacSystemFont,"Malgun Gothic",sans-serif;
+    font-weight:500;
+    background:linear-gradient(160deg,var(--desk) 0%,var(--desk-d) 100%);
+    color:var(--ink);
+    overflow:hidden;
+  }
+
+  .deck{
+    position:fixed;inset:var(--gap);
+    display:flex;flex-direction:column;
+  }
+
+  /* ---------- 탭 바 ---------- */
+  .tabbar{
+    display:flex;align-items:stretch;height:var(--tab-h);flex:0 0 auto;
+    filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));
+  }
+  .brand{
+    background:var(--paper);color:var(--ink);
+    padding:9px 44px 9px 26px;border-radius:10px 0 0 0;
+    clip-path:polygon(0 0,100% 0,calc(100% - var(--slant)) 100%,0 100%);
+    display:flex;flex-direction:column;justify-content:center;flex:0 0 auto;
+    position:relative;z-index:20;
+  }
+  .brand .bt{font-size:1.18rem;font-weight:700;font-style:italic;letter-spacing:.01em;white-space:nowrap;}
+  .brand .bs{font-size:.62rem;font-weight:300;color:var(--sub);margin-top:3px;white-space:nowrap;}
+
+  .tabs{display:flex;align-items:stretch;flex:1;min-width:0;}
+  .tab{
+    appearance:none;border:0;cursor:pointer;font:inherit;
+    background:var(--red-dim);color:#FFE9E9;font-weight:700;
+    font-size:.86rem;letter-spacing:.01em;white-space:nowrap;
+    padding:0 26px 0 calc(26px + var(--slant));
+    margin-left:calc(var(--slant) * -1);
+    clip-path:polygon(var(--slant) 0,100% 0,calc(100% - var(--slant)) 100%,0 100%);
+    transition:background .18s,color .18s;
+    flex:1 1 0;min-width:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .tab:first-child{margin-left:calc(var(--slant) * -1);}
+  .tab:hover{background:var(--red-d);color:#fff;}
+  .tab.on{background:var(--red);color:#fff;}
+  .tab:focus-visible{outline:2px solid #fff;outline-offset:-5px;}
+  .tab .num{
+    font-size:.68rem;font-weight:300;opacity:.8;margin-right:7px;
+  }
+  /* 마지막 탭의 오른쪽 사선 끝을 덮는 여백 */
+  .tabend{flex:0 0 var(--slant);}
+
+  /* ---------- 본문(슬라이드) ---------- */
+  .stage{
+    flex:1;min-height:0;position:relative;
+    background:var(--paper);
+    border-radius:0 6px 6px 6px;
+    box-shadow:0 18px 50px rgba(0,0,0,.42);
+    overflow:hidden;
+  }
+  .stage iframe{
+    position:absolute;inset:0;width:100%;height:100%;border:0;
+    opacity:0;pointer-events:none;
+  }
+  .stage iframe.on{opacity:1;pointer-events:auto;}
+
+  /* ---------- 아래 도구 줄 ---------- */
+  .foot{
+    flex:0 0 auto;display:flex;align-items:center;gap:14px;
+    padding:10px 4px 0;color:#E6DFD7;font-size:.74rem;font-weight:300;
+  }
+  .foot .now{font-weight:700;color:#fff;font-size:.8rem;}
+  .foot .spacer{flex:1;}
+  .foot a{
+    color:#fff;text-decoration:none;font-weight:500;font-size:.74rem;
+    background:rgba(255,255,255,.14);border-radius:999px;padding:6px 14px;
+    transition:background .15s;
+  }
+  .foot a:hover{background:rgba(255,255,255,.26);}
+  .foot kbd{
+    font-family:inherit;font-size:.68rem;background:rgba(0,0,0,.22);
+    border-radius:5px;padding:2px 6px;margin:0 1px;
+  }
+
+  /* ---------- 좁은 화면 ---------- */
+  @media(max-width:860px){
+    :root{--gap:10px;--tab-h:52px;--slant:18px;}
+    .brand{padding:8px 30px 8px 16px;border-radius:8px 0 0 0;}
+    .brand .bt{font-size:.95rem;}
+    .brand .bs{display:none;}
+    .tabs{overflow-x:auto;scrollbar-width:none;}
+    .tabs::-webkit-scrollbar{display:none;}
+    .tab{flex:0 0 auto;font-size:.78rem;padding:0 18px 0 calc(18px + var(--slant));}
+    .foot .keys{display:none;}
+  }
+  @media(max-width:480px){
+    .tab .num{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="deck">
+  <header class="tabbar">
+    <div class="brand">
+      <span class="bt">DR.BAE SEMINAR</span>
+      <span class="bs">닥터배 오프라인 세미나 자료 — 협약 샵 원장님 전용</span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="세미나 자료"></nav>
+    <span class="tabend"></span>
+  </header>
+
+  <main class="stage" id="stage"></main>
+
+  <div class="foot">
+    <span class="now" id="now"></span>
+    <span class="keys">탭 이동 <kbd>1</kbd>~<kbd>5</kbd> 또는 <kbd>←</kbd><kbd>→</kbd></span>
+    <span class="spacer"></span>
+    <a id="open" href="#" target="_blank" rel="noopener">새 창에서 열기 ↗</a>
+  </div>
+</div>
+
+<script>
+const PAGES = [
+  { t:"고객 안내",        u:"https://baelab-create.github.io/drbae-customer/" },
+  { t:"입점 가이드·주문", u:"https://baelab-create.github.io/drbae-guide/" },
+  { t:"제품 라인업",      u:"https://baelab-create.github.io/drbae-lineup/" },
+  { t:"마이크로젝션",     u:"https://baelab-create.github.io/Microjection_Skin-care/" },
+  { t:"두피 케어",        u:"https://baelab-create.github.io/Scalp_Care/" }
+];
+
+const tabsEl = document.getElementById('tabs');
+const stage  = document.getElementById('stage');
+const nowEl  = document.getElementById('now');
+const openEl = document.getElementById('open');
+
+PAGES.forEach((p, i) => {
+  const b = document.createElement('button');
+  b.className = 'tab';
+  b.type = 'button';
+  b.innerHTML = '<span class="num">0' + (i+1) + '</span>' + p.t;
+  b.addEventListener('click', () => show(i));
+  tabsEl.appendChild(b);
+
+  const f = document.createElement('iframe');
+  f.title = p.t;
+  f.loading = 'lazy';
+  stage.appendChild(f);
+});
+
+let cur = -1;
+function show(i){
+  if (i < 0 || i >= PAGES.length) return;
+  cur = i;
+  const tabs = tabsEl.children, frames = stage.children;
+  for (let k = 0; k < PAGES.length; k++){
+    tabs[k].classList.toggle('on', k === i);
+    tabs[k].setAttribute('aria-current', k === i ? 'page' : 'false');
+    frames[k].classList.toggle('on', k === i);
+  }
+  /* 한 번 연 탭은 그대로 두어 다시 눌렀을 때 바로 나오게 한다 */
+  if (!frames[i].src) frames[i].src = PAGES[i].u;
+  nowEl.textContent = PAGES[i].t;
+  openEl.href = PAGES[i].u;
+  if (location.hash !== '#' + (i+1)) history.replaceState(null, '', '#' + (i+1));
+  tabs[i].scrollIntoView({block:'nearest', inline:'nearest'});
+}
+
+document.addEventListener('keydown', e => {
+  if (e.target.closest('input,textarea')) return;
+  if (e.key >= '1' && e.key <= String(PAGES.length)) show(+e.key - 1);
+  else if (e.key === 'ArrowRight') show((cur + 1) % PAGES.length);
+  else if (e.key === 'ArrowLeft')  show((cur - 1 + PAGES.length) % PAGES.length);
+});
+
+const start = parseInt(location.hash.replace('#',''), 10);
+show(Number.isInteger(start) && start >= 1 && start <= PAGES.length ? start - 1 : 0);
+</script>
+</body>
+</html>
