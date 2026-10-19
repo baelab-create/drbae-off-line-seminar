@@ -64,7 +64,7 @@
     appearance:none;border:0;cursor:pointer;font:inherit;
     background:var(--red-dim);color:#FFE9E9;font-weight:700;
     font-size:.86rem;letter-spacing:.01em;white-space:nowrap;
-    padding:0 26px 0 calc(26px + var(--slant));
+    padding:0 18px 0 calc(18px + var(--slant));
     margin-left:calc(var(--slant) * -1);
     clip-path:polygon(var(--slant) 0,100% 0,calc(100% - var(--slant)) 100%,0 100%);
     transition:background .18s,color .18s;
@@ -145,7 +145,7 @@
 
   <div class="foot">
     <span class="now" id="now"></span>
-    <span class="keys">탭 이동 <kbd>1</kbd>~<kbd>5</kbd> 또는 <kbd>←</kbd><kbd>→</kbd></span>
+    <span class="keys">탭 이동 <kbd>1</kbd>~<kbd id="klast">5</kbd> 또는 <kbd>←</kbd><kbd>→</kbd></span>
     <span class="spacer"></span>
     <a id="open" href="#" target="_blank" rel="noopener">새 창에서 열기 ↗</a>
   </div>
@@ -153,11 +153,12 @@
 
 <script>
 const PAGES = [
-  { t:"고객 안내",        u:"https://baelab-create.github.io/drbae-customer/" },
-  { t:"입점 가이드·주문", u:"https://baelab-create.github.io/drbae-guide/" },
-  { t:"제품 라인업",      u:"https://baelab-create.github.io/drbae-lineup/" },
-  { t:"마이크로젝션",     u:"https://baelab-create.github.io/Microjection_Skin-care/" },
-  { t:"두피 케어",        u:"https://baelab-create.github.io/Scalp_Care/" }
+  { t:"고객 안내",    u:"https://baelab-create.github.io/drbae-customer/" },
+  { t:"입점·주문",    u:"https://baelab-create.github.io/drbae-guide/" },
+  { t:"제품 라인업",  u:"https://baelab-create.github.io/drbae-lineup/" },
+  { t:"마이크로젝션", u:"https://baelab-create.github.io/Microjection_Skin-care/" },
+  { t:"두피 케어",    u:"https://baelab-create.github.io/Scalp_Care/" },
+  { t:"전문점 안내",  u:"https://baelab-create.github.io/drbae-partner-seminar/" }
 ];
 
 const tabsEl = document.getElementById('tabs');
@@ -203,6 +204,8 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'ArrowRight') show((cur + 1) % PAGES.length);
   else if (e.key === 'ArrowLeft')  show((cur - 1 + PAGES.length) % PAGES.length);
 });
+
+document.getElementById('klast').textContent = PAGES.length;
 
 const start = parseInt(location.hash.replace('#',''), 10);
 show(Number.isInteger(start) && start >= 1 && start <= PAGES.length ? start - 1 : 0);
